@@ -1,44 +1,44 @@
-# 📚 Application de Gestion de Bibliothèque
+# 📚 Library Management Application
 
-Une application complète de gestion de bibliothèque construite avec Spring Boot, React et Docker.
+A complete library management application built with Spring Boot, React, and Docker.
 
-## 🚀 Technologies utilisées
+## 🚀 Technologies Used
 
 ### Backend
-- **Spring Boot 3.2.0** - Framework Java
-- **Spring Data JPA** - Persistance des données
-- **H2 Database** - Base de données en mémoire
-- **Maven** - Gestion des dépendances
+- **Spring Boot 3.2.0** - Java Framework
+- **Spring Data JPA** - Data Persistence
+- **H2 Database** - In-memory Database
+- **Maven** - Dependency Management
 
 ### Frontend
-- **React 18** - Framework JavaScript
+- **React 18** - JavaScript Framework
 - **React Router** - Navigation
-- **React Bootstrap** - Interface utilisateur
-- **Axios** - Client HTTP
-- **Bootstrap 5** - Framework CSS
+- **React Bootstrap** - User Interface
+- **Axios** - HTTP Client
+- **Bootstrap 5** - CSS Framework
 
 ### DevOps
-- **Docker** - Conteneurisation
+- **Docker** - Containerization
 - **Docker Compose** - Orchestration
 
-## 📋 Fonctionnalités
+## 📋 Features
 
-- ✅ Gestion complète des livres (CRUD)
-- ✅ Recherche de livres par titre, auteur ou ISBN
-- ✅ Gestion des statuts (disponible, emprunté, réservé, etc.)
-- ✅ Emprunt et retour de livres
-- ✅ Interface utilisateur moderne et responsive
-- ✅ API REST complète
-- ✅ Conteneurisation avec Docker
+- ✅ Complete book management (CRUD)
+- ✅ Book search by title, author, or ISBN
+- ✅ Status management (available, borrowed, reserved, etc.)
+- ✅ Book borrowing and returning
+- ✅ Modern and responsive user interface
+- ✅ Complete REST API
+- ✅ Docker containerization
 
-## 🛠️ Installation et démarrage
+## 🛠️ Installation and Setup
 
-### Prérequis
-- Java 17 ou supérieur
-- Node.js 18 ou supérieur
-- Docker et Docker Compose (optionnel)
+### Prerequisites
+- Java 17 or higher
+- Node.js 18 or higher
+- Docker and Docker Compose (optional)
 
-### Option 1: Démarrage local
+### Option 1: Local Setup
 
 #### Backend
 ```bash
@@ -53,40 +53,40 @@ npm install
 npm start
 ```
 
-### Option 2: Démarrage avec Docker
+### Option 2: Docker Setup
 
 ```bash
-# Construire et démarrer tous les services
+# Build and start all services
 docker-compose up --build
 
-# Ou en arrière-plan
+# Or in background
 docker-compose up -d --build
 ```
 
-## 🌐 Accès à l'application
+## 🌐 Application Access
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8080/api
-- **Console H2**: http://localhost:8080/h2-console
+- **H2 Console**: http://localhost:8080/h2-console
   - JDBC URL: `jdbc:h2:mem:testdb`
   - Username: `sa`
   - Password: `password`
 
 ## 📚 API Endpoints
 
-### Livres
-- `GET /api/books` - Récupérer tous les livres
-- `GET /api/books/{id}` - Récupérer un livre par ID
-- `POST /api/books` - Créer un nouveau livre
-- `PUT /api/books/{id}` - Mettre à jour un livre
-- `DELETE /api/books/{id}` - Supprimer un livre
-- `GET /api/books/search?keyword={keyword}` - Rechercher des livres
-- `GET /api/books/status/{status}` - Récupérer les livres par statut
-- `POST /api/books/{id}/borrow` - Emprunter un livre
-- `POST /api/books/{id}/return` - Retourner un livre
-- `GET /api/books/stats` - Récupérer les statistiques
+### Books
+- `GET /api/books` - Get all books
+- `GET /api/books/{id}` - Get a book by ID
+- `POST /api/books` - Create a new book
+- `PUT /api/books/{id}` - Update a book
+- `DELETE /api/books/{id}` - Delete a book
+- `GET /api/books/search?keyword={keyword}` - Search books
+- `GET /api/books/status/{status}` - Get books by status
+- `POST /api/books/{id}/borrow` - Borrow a book
+- `POST /api/books/{id}/return` - Return a book
+- `GET /api/books/stats` - Get statistics
 
-## 🏗️ Structure du projet
+## 🏗️ Project Structure
 
 ```
 library-management-app/
@@ -110,7 +110,9 @@ library-management-app/
 └── README.md
 ```
 
-## 🧪 Tests
+## 🧪 Testing
+
+(To be done)
 
 ### Backend
 ```bash
@@ -124,63 +126,61 @@ cd frontend
 npm test
 ```
 
-## 🐳 Commandes Docker utiles
+## 🐳 Useful Docker Commands
 
 ```bash
-# Construire les images
+# Build images
 docker-compose build
 
-# Démarrer les services
+# Start services
 docker-compose up
 
-# Arrêter les services
+# Stop services
 docker-compose down
 
-# Voir les logs
+# View logs
 docker-compose logs -f
 
-# Reconstruire et redémarrer
+# Rebuild and restart
 docker-compose up --build
 ```
 
-## 📝 Modèle de données
+## 📝 Data Model
 
-### Livre (Book)
-- `id` - Identifiant unique
-- `title` - Titre du livre
-- `author` - Auteur
-- `description` - Description (optionnel)
-- `publicationYear` - Année de publication
-- `isbn` - Numéro ISBN
-- `status` - Statut (AVAILABLE, BORROWED, RESERVED, LOST, DAMAGED)
-- `createdAt` - Date de création
-- `updatedAt` - Date de modification
+### Book
+- `id` - Unique identifier
+- `title` - Book title
+- `author` - Author
+- `description` - Description (optional)
+- `publicationYear` - Publication year
+- `isbn` - ISBN number
+- `status` - Status (AVAILABLE, BORROWED, RESERVED, LOST, DAMAGED)
+- `createdAt` - Creation date
+- `updatedAt` - Last modification date
 
-## 🎯 Fonctionnalités à venir
+## 🎯 Upcoming Features
 
-- [ ] Gestion des utilisateurs et authentification
-- [ ] Gestion des emprunts avec dates
-- [ ] Notifications et rappels
-- [ ] Génération de rapports
-- [ ] Import/export de données
-- [ ] Interface d'administration
+- [ ] User management and authentication
+- [ ] Loan management with dates
+- [ ] Notifications and reminders
+- [ ] Report generation
+- [ ] Data import/export
+- [ ] Administration interface
 
-## 🤝 Contribution
+## 🤝 Contributing
 
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📄 Licence
+## 📄 License
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
-## 👨‍💻 Auteur
+## 👨‍💻 Author
 
-**Eric Diallo** - Développeur Java passionné
+**Eric Diallo**
 
 ---
-
-*Ce projet a été créé pour s'entraîner sur Spring Boot, React et Docker afin de valoriser le profil de développeur Java.*

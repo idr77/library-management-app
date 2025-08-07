@@ -3,11 +3,34 @@ import { Form, Button, Card, Alert, Row, Col } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { bookService } from '../services/api';
 
+/**
+ * BookForm component - Add/edit book form
+ * 
+ * This component handles both adding new books and editing existing books.
+ * It uses URL parameters to determine the mode (add or edit) and loads
+ * book data if necessary.
+ * 
+ * Features:
+ * - Input form with validation
+ * - Add and edit modes
+ * - Client-side validation with Bootstrap
+ * - Validation and API error handling
+ * - Automatic navigation after save
+ * - Responsive interface with Bootstrap
+ * 
+ * @returns {JSX.Element} The add/edit book form
+ */
 const BookForm = () => {
+  // Get ID from URL parameters
   const { id } = useParams();
+  
+  // React Router navigation hook
   const navigate = useNavigate();
+  
+  // Determines if we're in edit mode (true) or add mode (false)
   const isEditing = !!id;
 
+  // State for form data
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -17,16 +40,27 @@ const BookForm = () => {
     status: 'AVAILABLE'
   });
 
+  // State to manage loading spinner display
   const [loading, setLoading] = useState(false);
+  
+  // State to manage error messages
   const [error, setError] = useState(null);
+  
+  // State to activate Bootstrap validation
   const [validated, setValidated] = useState(false);
 
+  /**
+   * Loads book data if in edit mode
+   */
   useEffect(() => {
     if (isEditing) {
       fetchBook();
     }
   }, [id]);
 
+  /**
+   * Retrieves existing book data to display in the form
+   */
   const fetchBook = async () => {
     try {
       setLoading(true);
@@ -40,13 +74,19 @@ const BookForm = () => {
         status: book.status || 'AVAILABLE'
       });
     } catch (err) {
-      setError('Erreur lors du chargement du livre');
-      console.error('Erreur fetchBook:', err);
+      setError('Error loading book');
+      console.error('fetchBook error:', err);
     } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Handles changes in form fields
+   * Updates local state with new values
+   * 
+   * @param {Event} e - The change event
+   */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -55,10 +95,17 @@ const BookForm = () => {
     }));
   };
 
+  /**
+   * Handles form submission
+   * Validates data and sends request to API
+   * 
+   * @param {Event} e - The submission event
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     
+    // Bootstrap validation
     if (form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
@@ -69,31 +116,35 @@ const BookForm = () => {
       setLoading(true);
       setError(null);
 
+      // Convert year to number
       const bookData = {
         ...formData,
         publicationYear: parseInt(formData.publicationYear)
       };
 
+      // API call based on mode (add or edit)
       if (isEditing) {
         await bookService.updateBook(id, bookData);
       } else {
         await bookService.createBook(bookData);
       }
 
+      // Navigate to book list after save
       navigate('/books');
     } catch (err) {
-      setError(err.response?.data?.error || 'Erreur lors de la sauvegarde');
-      console.error('Erreur submit:', err);
+      setError(err.response?.data?.error || 'Save error');
+      console.error('Submit error:', err);
     } finally {
       setLoading(false);
     }
   };
 
+  // Display loading spinner in edit mode
   if (loading && isEditing) {
     return (
       <div className="text-center">
         <div className="spinner-border" role="status">
-          <span className="visually-hidden">Chargement...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -102,53 +153,56 @@ const BookForm = () => {
   return (
     <div>
       <h1 className="mb-4">
-        {isEditing ? 'Modifier le livre' : 'Ajouter un nouveau livre'}
+        {isEditing ? 'Edit Book' : 'Add New Book'}
       </h1>
 
+      {/* Display error messages */}
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Card>
         <Card.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            {/* First row: Title and Author */}
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Titre *</Form.Label>
+                  <Form.Label>Title *</Form.Label>
                   <Form.Control
                     type="text"
                     name="title"
                     value={formData.title}
                     onChange={handleInputChange}
                     required
-                    placeholder="Entrez le titre du livre"
+                    placeholder="Enter book title"
                   />
                   <Form.Control.Feedback type="invalid">
-                    Le titre est obligatoire.
+                    Title is required.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Auteur *</Form.Label>
+                  <Form.Label>Author *</Form.Label>
                   <Form.Control
                     type="text"
                     name="author"
                     value={formData.author}
                     onChange={handleInputChange}
                     required
-                    placeholder="Entrez le nom de l'auteur"
+                    placeholder="Enter author name"
                   />
                   <Form.Control.Feedback type="invalid">
-                    L'auteur est obligatoire.
+                    Author is required.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
 
+            {/* Second row: Year and ISBN */}
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Année de publication *</Form.Label>
+                  <Form.Label>Publication Year *</Form.Label>
                   <Form.Control
                     type="number"
                     name="publicationYear"
@@ -160,7 +214,7 @@ const BookForm = () => {
                     placeholder="Ex: 2023"
                   />
                   <Form.Control.Feedback type="invalid">
-                    L'année de publication est obligatoire et doit être valide.
+                    Publication year is required and must be valid.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -176,12 +230,13 @@ const BookForm = () => {
                     placeholder="Ex: 978-0-7475-3269-9"
                   />
                   <Form.Control.Feedback type="invalid">
-                    L'ISBN est obligatoire.
+                    ISBN is required.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
 
+            {/* Description (optional) */}
             <Form.Group className="mb-3">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -190,41 +245,43 @@ const BookForm = () => {
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="Entrez une description du livre (optionnel)"
+                placeholder="Enter book description (optional)"
               />
             </Form.Group>
 
+            {/* Status (visible only in edit mode) */}
             {isEditing && (
               <Form.Group className="mb-3">
-                <Form.Label>Statut</Form.Label>
+                <Form.Label>Status</Form.Label>
                 <Form.Select
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
                 >
-                  <option value="AVAILABLE">Disponible</option>
-                  <option value="BORROWED">Emprunté</option>
-                  <option value="RESERVED">Réservé</option>
-                  <option value="LOST">Perdu</option>
-                  <option value="DAMAGED">Endommagé</option>
+                  <option value="AVAILABLE">Available</option>
+                  <option value="BORROWED">Borrowed</option>
+                  <option value="RESERVED">Reserved</option>
+                  <option value="LOST">Lost</option>
+                  <option value="DAMAGED">Damaged</option>
                 </Form.Select>
               </Form.Group>
             )}
 
+            {/* Action buttons */}
             <div className="d-flex gap-2">
               <Button 
                 type="submit" 
                 variant="primary" 
                 disabled={loading}
               >
-                {loading ? 'Sauvegarde...' : (isEditing ? 'Mettre à jour' : 'Ajouter')}
+                {loading ? 'Saving...' : (isEditing ? 'Update' : 'Add')}
               </Button>
               <Button 
                 type="button" 
                 variant="secondary" 
                 onClick={() => navigate('/books')}
               >
-                Annuler
+                Cancel
               </Button>
             </div>
           </Form>

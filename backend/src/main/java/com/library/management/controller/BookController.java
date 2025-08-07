@@ -23,20 +23,49 @@ import com.library.management.service.BookService;
 
 import jakarta.validation.Valid;
 
+/**
+ * REST controller for managing books in the library API.
+ * 
+ * This controller exposes REST endpoints for all book-related operations:
+ * CRUD, search, borrow, return and statistics. It handles HTTP requests
+ * and returns appropriate responses with corresponding HTTP status codes.
+ * 
+ * The controller includes error handling and validation of input data
+ * with error messages in English.
+ * 
+ * @author Library Management System
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/api/books")
 @CrossOrigin(origins = "http://localhost:3000")
 public class BookController {
     
+    /**
+     * Service for managing books.
+     * Automatically injected by Spring.
+     */
     @Autowired
     private BookService bookService;
     
+    /**
+     * Retrieves all books from the library.
+     * 
+     * @return ResponseEntity containing the list of all books
+     */
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
     }
     
+    /**
+     * Retrieves a book by its identifier.
+     * 
+     * @param id The book identifier to retrieve
+     * @return ResponseEntity containing the book if it exists, otherwise 404 Not Found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         return bookService.getBookById(id)
@@ -44,6 +73,13 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
+    /**
+     * Creates a new book in the library.
+     * 
+     * @param book The book to create (automatically validated)
+     * @return ResponseEntity with the created book and 201 Created status
+     * @throws RuntimeException if a book with the same ISBN already exists
+     */
     @PostMapping
     public ResponseEntity<?> createBook(@Valid @RequestBody Book book) {
         try {
@@ -54,6 +90,14 @@ public class BookController {
         }
     }
     
+    /**
+     * Updates an existing book.
+     * 
+     * @param id The book identifier to modify
+     * @param bookDetails The new book data (automatically validated)
+     * @return ResponseEntity with the updated book
+     * @throws RuntimeException if the book doesn't exist
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody Book bookDetails) {
         try {
@@ -64,6 +108,13 @@ public class BookController {
         }
     }
     
+    /**
+     * Deletes a book from the library.
+     * 
+     * @param id The book identifier to delete
+     * @return ResponseEntity with 200 OK status if deletion succeeds
+     * @throws RuntimeException if the book doesn't exist
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         try {
@@ -74,18 +125,38 @@ public class BookController {
         }
     }
     
+    /**
+     * Searches books by keyword.
+     * The search is performed in title, author and ISBN.
+     * 
+     * @param keyword The search keyword
+     * @return ResponseEntity containing the list of matching books
+     */
     @GetMapping("/search")
     public ResponseEntity<List<Book>> searchBooks(@RequestParam String keyword) {
         List<Book> books = bookService.searchBooks(keyword);
         return ResponseEntity.ok(books);
     }
     
+    /**
+     * Retrieves books with a specific status.
+     * 
+     * @param status The status of books to retrieve
+     * @return ResponseEntity containing the list of books with the specified status
+     */
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Book>> getBooksByStatus(@PathVariable BookStatus status) {
         List<Book> books = bookService.getBooksByStatus(status);
         return ResponseEntity.ok(books);
     }
     
+    /**
+     * Borrows a book by changing its status from AVAILABLE to BORROWED.
+     * 
+     * @param id The book identifier to borrow
+     * @return ResponseEntity with the updated book
+     * @throws RuntimeException if the book is not available or doesn't exist
+     */
     @PostMapping("/{id}/borrow")
     public ResponseEntity<?> borrowBook(@PathVariable Long id) {
         try {
@@ -96,6 +167,13 @@ public class BookController {
         }
     }
     
+    /**
+     * Returns a book by changing its status from BORROWED to AVAILABLE.
+     * 
+     * @param id The book identifier to return
+     * @return ResponseEntity with the updated book
+     * @throws RuntimeException if the book is not borrowed or doesn't exist
+     */
     @PostMapping("/{id}/return")
     public ResponseEntity<?> returnBook(@PathVariable Long id) {
         try {
@@ -106,6 +184,12 @@ public class BookController {
         }
     }
     
+    /**
+     * Retrieves library statistics.
+     * Returns the number of available and borrowed books.
+     * 
+     * @return ResponseEntity containing the statistics in JSON format
+     */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Long>> getBookStats() {
         long availableCount = bookService.getAvailableBooksCount();
